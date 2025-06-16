@@ -8,7 +8,7 @@
 
 #define CONFIGS_FILA "arquivo/configs_fila.dat"
 
-// FunÁ„o para abrir o arquivo da fila (usada pelos dois programas)
+// Fun√ß√£o para abrir o arquivo da fila (usada pelos dois programas) OK
 FILE *configs_abrirfila() {
 
     FILE *arquivo;
@@ -20,12 +20,12 @@ FILE *configs_abrirfila() {
     return arquivo;
 }
 
-// FunÁ„o para fechar ambos os arquivos (usada pelos dois programas)
+// Fun√ß√£o para fechar ambos os arquivos (usada pelos dois programas) OK
 void configs_fechar(FILE *arquivo) {
     fclose(arquivo);
 }
 
-// FunÁ„o para criar a fila (usada pelo programa TV.C)
+// Fun√ß√£o para criar a fila (usada pelo programa TV.C) OK
 filaEspera *criar_fila(){
 
     filaEspera *fila = (filaEspera *) malloc(sizeof(filaEspera));
@@ -38,8 +38,8 @@ filaEspera *criar_fila(){
     return fila;
 }
 
-// FunÁ„o para criar ficha (usada pelo programa TOTEM.C)
-ficha *criar_ficha(int *senha_atual){
+// Fun√ß√£o para criar ficha (usada pelo programa TOTEM.C) OK
+ficha *criar_ficha(int prioridade, int *senha_atual){
 
     (*senha_atual)++;
     srand(time(NULL));
@@ -48,9 +48,11 @@ ficha *criar_ficha(int *senha_atual){
     printf("\nDigite o nome: ");
     fgets(nome, sizeof(nome), stdin);
 
+    int prior;
+
     ficha *nova_ficha = (ficha *)malloc(sizeof(ficha));
     nova_ficha->senha = (*senha_atual);
-    nova_ficha->prioridade = 1;
+    nova_ficha->prioridade = prioridade;
     nova_ficha->tempo = (rand() % 10) + 1;
     strcpy(nova_ficha->nome, nome);
     nova_ficha->proximo = NULL;
@@ -58,7 +60,7 @@ ficha *criar_ficha(int *senha_atual){
     return nova_ficha;
 }
 
-// FunÁ„o para ler a ficha do arquivo fila (usada pelo programa TV.C)
+// Fun√ß√£o para ler a ficha do arquivo fila (usada pelo programa TV.C)
 ficha *ler_ficha(){
 
     FILE *arquivo_fila;
@@ -68,7 +70,7 @@ ficha *ler_ficha(){
         return NULL;
     }
 
-    // Verifica se o arquivo est· vazio
+    // Verifica se o arquivo est√° vazio
     fseek(arquivo_fila, 0, SEEK_END);
     long tamanho = ftell(arquivo_fila);
     rewind(arquivo_fila);
@@ -80,7 +82,7 @@ ficha *ler_ficha(){
 
     ficha *ficha_lida = (ficha *)malloc(sizeof(ficha));
     if(ficha_lida == NULL) {
-        printf("\nErro de alocaÁ„o!\n");
+        printf("\nErro de aloca√ß√£o!\n");
         configs_fechar(arquivo_fila);
         return NULL;
     }
@@ -96,7 +98,7 @@ ficha *ler_ficha(){
     return ficha_lida;
 }
 
-// FunÁ„o salvar ficha no arquivo da fila (usada pelo programa TOTEM.C)
+// Fun√ß√£o salvar ficha no arquivo da fila (usada pelo programa TOTEM.C)
 void salvar_ficha(ficha *nova_ficha){
 
     FILE *arquivo_fila;
@@ -113,26 +115,27 @@ void salvar_ficha(ficha *nova_ficha){
     configs_fechar(arquivo_fila);
 }
 
-// FunÁ„o para inserir ficha no final da fila (usada pelo programa TV.C)
-void atualizar_fila(filaEspera *fila, int *senha_atual){
+// Fun√ß√£o para inserir ficha no final da fila (usada pelo programa TV.C)
+void atualizar_fila(filaEspera *fila, ficha *nova_ficha, int *senha_atual){
     if(fila == NULL){
-        printf("\nFila inv·lida!\n");
+        printf("\nFila inv√°lida!\n");
         return;
     }
 
-    ficha *nova_ficha = ler_ficha();
     if(nova_ficha == NULL) {
+        printf("\nFicha inv√°lida!\n");
         return;
     }
 
     if(nova_ficha->senha == *senha_atual){
         free(nova_ficha);
+        return;
     } else {
         // Se fila vazia
         if(fila->primeiro == NULL) {
             fila->primeiro = nova_ficha;
             fila->ultimo = nova_ficha;
-        } else {
+        } else { // Se ficha n√£o est√° na fila (verifica pelo √∫ltimo elemento)
             fila->ultimo->proximo = nova_ficha;
             fila->ultimo = nova_ficha;
         }
@@ -140,7 +143,7 @@ void atualizar_fila(filaEspera *fila, int *senha_atual){
     }
 }
 
-// FunÁ„o para remover ficha no inÌcio da fila (usada pelo programa TV.C)
+// Fun√ß√£o para remover ficha no in√≠cio da fila (usada pelo programa TV.C)
 ficha *remover_fila(filaEspera *fila){
     if(fila == NULL || fila->primeiro == NULL){
         return NULL;
@@ -158,10 +161,10 @@ ficha *remover_fila(filaEspera *fila){
     return ficha_removida;
 }
 
-// FunÁ„o para destruir a fila (usada pelo programa TV.C)
+// Fun√ß√£o para destruir a fila (usada pelo programa TV.C)
 void destruir_fila(filaEspera *fila) {
   if(fila == NULL){
-    printf("Fila inv·lida!");
+    printf("Fila inv√°lida!");
     return;
   }
 

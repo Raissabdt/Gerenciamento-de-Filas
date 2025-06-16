@@ -8,18 +8,18 @@
 
 #define CONFIGS_ATEND "arquivo/configs_atend.dat"
 
-// Função para abrir o arquivo do atendimento (usada pelos dois programas)
+// FunÃ§Ã£o para abrir o arquivo do atendimento (usada pelos dois programas)
 FILE *configs_abriratend() {
     FILE *arquivo;
-    if( access(CONFIGS_ATEND, F_OK ) != -1 ) { // Caso o arquivo já exista, apenas abre
+    if( access(CONFIGS_ATEND, F_OK ) != -1 ) { // Caso o arquivo jÃ¡ exista, apenas abre
         arquivo = fopen(CONFIGS_ATEND, "rb+");
     } else {
-        arquivo = fopen(CONFIGS_ATEND, "wb+"); // Caso o arquivo não exista, abre e escreve
+        arquivo = fopen(CONFIGS_ATEND, "wb+"); // Caso o arquivo nÃ£o exista, abre e escreve
         atendConfigs *atend = (atendConfigs *)malloc(sizeof(atendConfigs)); // Cria um atendimento
-        atend->status = 2; // Define valores padrão
+        atend->status = 2; // Define valores padrÃ£o
         atend->intervalo = 1;
         if (atend && arquivo) {
-          fwrite(atend, sizeof(atendConfigs), 1, arquivo); // Escreve no arquivo, termina a função,
+          fwrite(atend, sizeof(atendConfigs), 1, arquivo); // Escreve no arquivo, termina a funÃ§Ã£o,
         }                                                  // perde o atendimento
     }
     return arquivo;
@@ -29,7 +29,7 @@ void configs_fechar_atend(FILE *arquivo){
     fclose(arquivo);
 }
 
-//Função que lê o atendimento (usada pelo programa TV.C)
+//Funï¿½ï¿½o que lï¿½ o atendimento (usada pelo programa TV.C)
 void configs_ler(atendConfigs *atend) {
   FILE *arquivo = configs_abriratend();
   if (atend && arquivo) {
@@ -38,7 +38,7 @@ void configs_ler(atendConfigs *atend) {
   configs_fechar_atend(arquivo);
 }
 
-// Função que inicializa o atendimento
+// Funï¿½ï¿½o que inicializa o atendimento
 atendConfigs *configs_inicializar() {
     atendConfigs *atend = (atendConfigs *)malloc(sizeof(atendConfigs));
     if (!atend) {
@@ -51,7 +51,7 @@ atendConfigs *configs_inicializar() {
     } else {
         return NULL;
     }
-    return atend; // Retorna o atendimento, dessa vez não é perdido!
+    return atend; // Retorna o atendimento, dessa vez nï¿½o ï¿½ perdido!
 }
 
 void configs_salvar(atendConfigs *atend) {
@@ -72,8 +72,8 @@ void configs_atualizar(atendConfigs *atend, int status, int intervalo) {
 
 void configs_mostrar(atendConfigs *atend) {
   if (atend) {
-      // Exibir configurações (carrega do arquivo existente se existir)
-      printf("\nConfigurações:\n");
+      // Exibir configuraï¿½ï¿½es (carrega do arquivo existente se existir)
+      printf("\nConfiguraÃ§Ãµes:\n");
       printf(" - Status: %s\n", atend->status == 1 ? "Atendendo" : atend->status == 2 ? "Atendimento em intervalo" : "Atendimento Encerrado");
       printf(" - Intervalo: %d segundo\n\n", atend->intervalo);
   }
