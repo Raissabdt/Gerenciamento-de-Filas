@@ -39,7 +39,7 @@ filaEspera *criar_fila(){
 }
 
 // Função para criar ficha (usada pelo programa TOTEM.C) OK
-ficha *criar_ficha(int prioridade, int *senha_atual){
+ficha *criar_ficha(int prioridade, char *especialidade, int *senha_atual){
 
     (*senha_atual)++;
     srand(time(NULL));
@@ -48,11 +48,10 @@ ficha *criar_ficha(int prioridade, int *senha_atual){
     printf("\nDigite o nome: ");
     fgets(nome, sizeof(nome), stdin);
 
-    int prior;
-
     ficha *nova_ficha = (ficha *)malloc(sizeof(ficha));
     nova_ficha->senha = (*senha_atual);
     nova_ficha->prioridade = prioridade;
+    strcpy(nova_ficha->especialidade, especialidade);
     nova_ficha->tempo = (rand() % 10) + 1;
     strcpy(nova_ficha->nome, nome);
     nova_ficha->proximo = NULL;
@@ -127,7 +126,7 @@ void atualizar_fila(filaEspera *fila, ficha *nova_ficha, int *senha_atual){
         return;
     }
 
-    if(nova_ficha->senha == *senha_atual){
+    if(nova_ficha->senha == *senha_atual){ // Caso a fila esteja vazia, não poderemos comparar com a senha do ultimo
         free(nova_ficha);
         return;
     } else {

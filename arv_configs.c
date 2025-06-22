@@ -54,12 +54,12 @@ void inserir_no(abbPrior *abb, noPrioridade *novo_no) {
         printf("Parâmetros inválidos!");
         return;
     }
-    
+
     // Verifica se a árvore está vazia, se sim, o novo nó é a raiz;
     if(abb->raiz == NULL){
         abb->raiz = novo_no;
         return;
-    } 
+    }
 
     // Se a árvore não estiver vazia:
     // Começa a verificação pela raiz
@@ -84,12 +84,12 @@ void inserir_no(abbPrior *abb, noPrioridade *novo_no) {
             // Se encontrou o final da ramificação, insere o nó
             if(no_atual->esquerdo == NULL){
                 novo_no->pai = no_atual; // o pai do novo nó se torna o atual
-                no_atual->esquerdo = novo_no; // atual esquerdo aponta para o novo nó           
+                no_atual->esquerdo = novo_no; // atual esquerdo aponta para o novo nó
             } else {
                 // Se não, como o novo nó é menor, seguimos para a esquerda
                 no_atual = no_atual->esquerdo;
             }
-        } 
+        }
     }while(novo_no->pai == NULL);
 
 }
@@ -130,7 +130,7 @@ void removerNoComUmFilho(abbPrior *abb, noPrioridade *no) {
     free(no);
 }
 
-// Função para encontrar o nó mínimo (mais à esquerda) 
+// Função para encontrar o nó mínimo (mais à esquerda)
 noPrioridade *minimo(noPrioridade *node) {
     if(node == NULL){
         return NULL;
@@ -177,7 +177,7 @@ void removerNoComDoisFilhos(abbPrior* abb, noPrioridade* no) {
 
 // Função para remover o nó que estiver com fila vazia
 void remover_no(abbPrior *abb, noPrioridade *no){
-  
+
     if (no == NULL) return;
 
     if (no->esquerdo == NULL && no->direito == NULL) {
@@ -199,7 +199,7 @@ void remover_no(abbPrior *abb, noPrioridade *no){
 noPrioridade *buscar_no(abbPrior *abb, int chave){
 
     noPrioridade* no_atual = abb->raiz;
-    
+
     while(no_atual != NULL){
         if(no_atual->chave == chave){
             break;
@@ -227,16 +227,16 @@ void atualizar_arvore(abbPrior *abb, ficha *nova_ficha, int *senha_atual){
     }
 
     if(nova_ficha->senha == *senha_atual){
-        free(nova_ficha);
-        return;
-    } 
+            free(nova_ficha);
+            return;
+    }
 
     noPrioridade *no_insercao = buscar_no(abb, nova_ficha->prioridade);
 
     // Se o nó não foi encontrado na árvore
     if(no_insercao == NULL){
         // Cria um novo nó para a prioridade
-        no_insercao = criar_no(nova_ficha); 
+        no_insercao = criar_no(nova_ficha);
         // Insere o nó na árvore
         if(no_insercao == NULL){
             printf("\nErro ao criar a prioridade!");
@@ -244,14 +244,34 @@ void atualizar_arvore(abbPrior *abb, ficha *nova_ficha, int *senha_atual){
         } else {
             inserir_no(abb, no_insercao);
         }
-       
+
     } else {
         // Se o nó foi encontrado na árvore
         // Insere a ficha no final da fila
         no_insercao->fila->ultimo->proximo = nova_ficha;
         no_insercao->fila->ultimo = nova_ficha;
+
     }
     (*senha_atual)++;
+}
+
+ficha *ler_proximo_arv(abbPrior *abb){
+    if(abb->raiz == NULL){
+        return NULL;
+    }
+
+    noPrioridade *min = minimo(abb->raiz);
+    ficha *proximo = min->fila->primeiro->proximo;
+
+    if(min != abb->raiz && proximo == NULL){
+        if(min->direito != NULL){
+            proximo = min->direito->fila->primeiro;
+        } else {
+            proximo = min->pai->fila->primeiro;
+        }
+    }
+
+    return proximo;
 }
 
 // Função recursiva para destruir todos os nós da árvore
@@ -260,7 +280,7 @@ void destruir_no(noPrioridade *no_atual) {
     if (no_atual != NULL) {
         destruir_no(no_atual->esquerdo);
         destruir_no(no_atual->direito);
-           
+
         if(no_atual->pai != NULL){
             if(no_atual->pai->esquerdo == no_atual){
                 no_atual->pai->esquerdo = NULL;
@@ -279,5 +299,5 @@ void destruir_arvore(abbPrior *abb) {
     if (abb == NULL) return;
     destruir_no(abb->raiz);
     abb = NULL;
-    free(abb); 
+    free(abb);
 }

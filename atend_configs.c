@@ -29,7 +29,7 @@ void configs_fechar_atend(FILE *arquivo){
     fclose(arquivo);
 }
 
-//Fun��o que l� o atendimento (usada pelo programa TV.C)
+// Função que le o atendimento (usada pelo programa TV.C)
 void configs_ler(atendConfigs *atend) {
   FILE *arquivo = configs_abriratend();
   if (atend && arquivo) {
@@ -38,7 +38,7 @@ void configs_ler(atendConfigs *atend) {
   configs_fechar_atend(arquivo);
 }
 
-// Fun��o que inicializa o atendimento
+// Função que inicializa o atendimento
 atendConfigs *configs_inicializar() {
     atendConfigs *atend = (atendConfigs *)malloc(sizeof(atendConfigs));
     if (!atend) {
@@ -51,7 +51,7 @@ atendConfigs *configs_inicializar() {
     } else {
         return NULL;
     }
-    return atend; // Retorna o atendimento, dessa vez n�o � perdido!
+    return atend; // Retorna o atendimento, dessa vez não é perdido!
 }
 
 void configs_salvar(atendConfigs *atend) {
@@ -72,7 +72,7 @@ void configs_atualizar(atendConfigs *atend, int status, int intervalo) {
 
 void configs_mostrar(atendConfigs *atend) {
   if (atend) {
-      // Exibir configura��es (carrega do arquivo existente se existir)
+      // Exibir configurações (carrega do arquivo existente se existir)
       printf("\nConfigurações:\n");
       printf(" - Status: %s\n", atend->status == 1 ? "Atendendo" : atend->status == 2 ? "Atendimento em intervalo" : "Atendimento Encerrado");
       printf(" - Intervalo: %d segundo\n\n", atend->intervalo);
